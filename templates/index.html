@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/ico" href="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<title>AWS Cloud Backup</title>
+<style type="text/css">
+    head {
+       text-align: center;
+    }
+    body {
+        font-family: Calibri, sans-serif;
+        font-size: 40;
+        text-align: left;
+        height: 80%;
+        overflow: hidden;
+    }
+    .title{
+        background-color: #232F3E;
+        color: #EAEDED;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 15%;
+        width: 100%;
+        padding-top: 5%;
+        margin-top: 0;
+        margin-bottom:0;
+    }
+
+    .object{
+        font-size: 8;
+        overflow: scroll;
+        border:solid 1px #232F3E;
+        height: 300px;
+        width: 80%;
+        margin-bottom:10%;
+    }
+
+    .contents{
+        background-color:#FFFFFF;
+        color:#232F3E;
+        padding-top: 15%;
+        width: 100%;
+        height: 80%;
+        margin: 1% auto;
+        display: flex;
+    }
+    .listing{
+        float: left;
+        width: 50%;
+        padding-left:10%;
+        padding-right:10%;
+
+        font-size: 12;
+    }
+    .recovery{
+        width: 50%;
+        float: right;
+    }
+    .note{
+        font-size: 10;
+    }
+    footer {
+        background-color: #232F3E;
+        color: #EAEDED;
+        font-size: 8pt;
+        text-align: center;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 5%;
+        padding: 1% 1%;
+    }
+</style>
+
+
+</head>
+    <body>
+    <div class="title">
+        <h1 align=center>S3 백업 데이터 복원</h1>
+    </div>
+    <div class="contents">
+        <div class="listing">
+        <h3>백업 데이터 조회</h3>
+               <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico">
+            S3 버킷 이름: <input type ="text" id= "bucket" name ="bucket name" size = "40"></br>
+                           <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico">
+
+            Prefix 이름 (선택): <input type ="text" id= "prefix" name ="bucket name" size = "40"></br></br>
+
+                <div class="note">  예를 들어 `s3://demogo-datasync-jimini/4/4001`의 경우, S3 버킷 이름은 'demogo-datasync-jimini', Prefix는 '4/', '4/4', '4/40' 등이 될 수 있습니다.</div></br>
+            <input type="submit" id = "list_obj" value="조회">
+                </br></br>
+            <div id = "object" class = "object">
+
+            </div>
+        </div>
+
+        <div class="recovery" id="object">
+            <h3>백업 데이터 복원</h3>
+            <form>
+                <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> 복원 대상 버킷: <input id="pitr-bucket" type ="text" name ="prefix" size = "40" /> </br>
+                <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> 복원 디렉토리(Prefix - 선택): <input id="pitr-prefix" type ="text" name ="prefix" size = "40" /> </br>
+                <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> 복원 위치 버킷: <input id="pitr-dest" type ="text" name ="prefix" size = "40" /> </br>
+                <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> 복원 기준 시간:  <input id="pitr-time" type="datetime-local" /> </br>
+                </br>
+                <input id="pitr-button" type='button' value='복원'>
+            </form>
+        </div>
+    </div>
+    <script>
+        $("#pitr-button").click(function(){
+          const words = $("#pitr-time").val().split('-');
+          const clocks = words[2].split('T');
+          console.log(words)
+          console.log(clocks);
+          let time = words[1]
+          time += '-' + clocks[0]
+          time += '-' + words[0]
+          time += ' ' + clocks[1] + ':00'
+          time += ' ' + "+0900"
+          var params = {
+          "bucket" : $("#pitr-bucket").val(),
+          "dest" :  $("#pitr-dest").val(),
+          "prefix" :  $("#pitr-prefix").val(),
+          "time" :  time
+        };
+        
+        console.log(params);
+    
+          $.ajax({
+            type: "POST",
+            url: "pitr",
+            data: params,
+            success: function(){alert("success")}
+          });
+        });
+          
+      </script>
+
+    </body>
+<footer>
+</br>
+&copy 2020 Amazon Web Services, Inc. or its Affiliates. All rights reserved.
+</footer>
+<script>
+
+
+
+    $('#list_obj').click(function(){
+        var params = {
+            'bucket': $('#bucket').val(),
+            'prefix': $('#prefix').val()}
+
+        $.ajax({
+            type: 'POST',
+            url: "/list_obj",
+            data: params,
+            success: function(data) {
+                var obj_list = data.obj_list
+                console.log(obj_list)
+                $('#object').empty();
+                for (let i = 0; i < obj_list.length; i++){
+                    $('#object').append('<li>'+obj_list[i]+'</li>')
+
+                }
+            }
+        })
+    })
+
+</script>
+</html>
