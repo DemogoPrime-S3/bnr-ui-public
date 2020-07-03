@@ -34,17 +34,16 @@ def pitr(request):
         dest = request.POST['dest']
         try :
             do_restore(bucket, prefix, time, dest)
-            print("done")
             return HttpResponse("done")
         except:
             return HttpResponse("error")
 
 def do_restore(bucket, prefix, time, dest):
-    cmd2 = "s3-pit-restore -b demogo-datasync-jimini -d recovery-dst -p 0 -t "
-    cmd2 += '"' + "06-11-2020 15:00:00 +0900" + '"'
-    cmd = "s3-pit-restore " + "-b " + bucket + " -B " + dest + " -p " + prefix + " -t "
-    cmd += '"' + time + '"'
-    print(cmd2)
+    cmd = "s3-pit-restore " + "-b " + bucket + " -d " + dest
+    if prefix != "" :
+        cmd +=" -p " + prefix
+    cmd += " -t " + '"' + time + '"'
+    print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process.wait()
     return process.returncode
