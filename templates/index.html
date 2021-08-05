@@ -80,19 +80,19 @@
 </head>
     <body>
     <div class="title">
-        <h1 align=center>S3 백업 데이터 복원</h1>
+        <h1 align=center>S3 Back-Up Data Recovery</h1>
     </div>
     <div class="contents">
         <div class="listing">
-        <h3>백업 데이터 조회</h3>
+		<h3>List Back-up Data</h3>
                <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico">
-            S3 버킷 이름: <input type ="text" id= "bucket" name ="bucket name" size = "40"></br>
+            S3 Bucket Name: <input type ="text" id= "bucket" name ="bucket name" size = "40"></br>
                            <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico">
 
-            Prefix 이름 (선택): <input type ="text" id= "prefix" name ="bucket name" size = "40"></br></br>
+            Prefix Name (Optional): <input type ="text" id= "prefix" name ="bucket name" size = "40"></br></br>
 
-                <div class="note">  예를 들어 `s3://demogo-datasync-jimini/4/4001`의 경우, S3 버킷 이름은 'demogo-datasync-jimini', Prefix는 '4/', '4/4', '4/40' 등이 될 수 있습니다.</div></br>
-            <input type="submit" id = "list_obj" value="조회">
+                <div class="note">  For example, URL `s3://demogo-datasync-jimini/4/4001`, S3 Bucket Name is 'demogo-datasync-jimini', Prefix could be '4/', '4/4', '4/40'. </div></br>
+            <input type="submit" id = "list_obj" value="List">
                 </br></br>
             <div id = "object" class = "object">
 
@@ -100,14 +100,14 @@
         </div>
 
         <div class="recovery" id="object">
-            <h3>백업 데이터 복원</h3>
+            <h3>Restore S3 Back-Up Data</h3>
             <form>
                 <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> Recovery Target Bucket: <input id="pitr-bucket" type ="text" name ="prefix" size = "40" /> </br>
                 <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> Recovery Target Dir(Prefix - Option): <input id="pitr-prefix" type ="text" name ="prefix" size = "40" /> </br>
                 <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> Recovery Destination Dir(Prefix): <input id="pitr-dest" type ="text" name ="prefix" size = "40" /> </br>
                 <img src="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico"> Recovery Point Time:  <input id="pitr-time" type="datetime-local" /> </br>
                 </br>
-                <input id="pitr-button" type='button' value='복원'>
+                <input id="pitr-button" type='button' value='Recover'>
             </form>
         </div>
     </div>
@@ -144,7 +144,7 @@
     </body>
 <footer>
 </br>
-&copy 2020 Amazon Web Services, Inc. or its Affiliates. All rights reserved.
+&copy 2021 Amazon Web Services, Inc. or its Affiliates. All rights reserved.
 </footer>
 <script>
 
